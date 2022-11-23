@@ -1,0 +1,131 @@
+//Liana Rosado
+//11.22.2022
+//CSE 121 Section AV
+//TA: Lawrence Tan
+
+//Prioritizing Patients 
+
+import java.util.*;
+
+public class PatientPrioritizer {
+   public static final int HOSPITAL_ZIP = 12345;
+
+    public static void main(String[] args) {
+       Scanner console = new Scanner(System.in);
+
+       introMessage();
+       String name = patientName(console);
+       while (!(name.equals("quit"))) {
+          patientScore(console);
+          patientName(console);
+       }
+       if (name.equals("quit")) {
+          stats();
+       }
+
+    }
+    public static void introMessage() {
+      System.out.println("Hello! We value you and your time, so we will help");
+      System.out.println("you prioritize which patients to see next!");
+      System.out.println("Please answer the following questions about the next patient so");
+      System.out.println("we can help you do your best work :)");
+      System.out.println();
+    }
+
+    public static String patientName(Scanner console) {
+        System.out.println("Please enter the next patient's name or \"quit\" to end the program.");
+        System.out.print("Patient's name: ");
+        String name = console.next();
+        return name;
+    }
+      
+    public static void patientScore(Scanner console) {
+       //age
+        System.out.print("Patient age: ");
+        int age = console.nextInt();
+      //zip/ validity check
+        System.out.print("Patient zip code: ");
+        int zipCode = console.nextInt();
+        fiveDigits(zipCode);
+        while (fiveDigits(zipCode) == false) {
+           System.out.print("Invalid zip code, enter valid zip code: ");
+           zipCode = console.nextInt();
+        }  
+        if (fiveDigits(zipCode) == true)  {
+           System.out.print("Is our hospital \"in network\" for the patient's insurance? ");
+        }
+        //pain level
+        String network = console.next();
+        System.out.print("Patient pain level (1-10): ");
+        int painLevel = console.nextInt();
+        while (painLevel < 1 || painLevel > 10) {
+           System.out.print("Invalid pain level, enter valid pain level (1-10): ");
+           painLevel = console.nextInt();
+        }   
+        if (painLevel >= 1 && painLevel <= 10) {
+           System.out.print("Patient temperature (in degrees Farenheit): ");
+        }
+        double temp = console.nextDouble();
+           System.out.println();
+        int score = scoreCalc(age, zipCode, network, painLevel, temp);
+        System.out.println("We have found patient to have a priority score of: " + score);
+        if (score >= 332) {
+           System.out.println("We have determined this patient is high priority, ");
+           System.out.println("and it is advised to call an appropriate medical provider ASAP.");
+        }
+        else if (score >= 166 && score < 332) {
+           System.out.println("We have determined this patient is medium priority.");
+           System.out.println("Please assign an appropriate medical provider to their case");
+           System.out.println("and check back in with the patient's condition in a little while.");
+        } else {
+           System.out.println("We have determined this patient is low priority.");
+           System.out.println("Please put them on the waitlist for when a medical provider becomes available.");
+        }
+        System.out.println();
+        System.out.println("Thank you for using our system!");
+        System.out.println("We hope we have helped you do your best!");
+        
+   } // end of patientScore method 
+
+   public static boolean fiveDigits(int val) {
+      val = val / 10000; // get first digit
+      if (val == 0) { // has less than 5 digits
+         return false;
+         
+      } else if (val / 10 == 0) { // has 5 digits
+          return true;
+         
+      } else { // has more than 5 digits
+          return false;
+    } 
+} // end of fiveDigits method
+
+public static int scoreCalc(int age, int zipCode, String network, int painLevel, double temp) {
+      int score = 100;
+      if (age < 12 || age >= 75) {
+         score+= 50;
+      }
+      if (zipCode / 10000 == HOSPITAL_ZIP / 10000) {
+         score+= 25;
+         if (zipCode / 1000 == HOSPITAL_ZIP / 1000) {
+            score+= 15;
+         }
+      }
+      if (network.equals("y") || network.equals("yes")) {
+         score+= 50;
+      }
+      int painScore = painLevel * 10;
+      score+= painScore;
+      if (temp > 99.5) {
+         score+= 8;
+      }
+   return score;
+      }//end of scoreCalc method 
+      public static void stats() {
+         System.out.println("Statistics for the day:");
+         System.out.println("... patients were helped");
+         System.out.println("...the highest priority patient we saw had a score of ");
+         System.out.println("Good job today!");
+      }
+
+} //end of public class 
